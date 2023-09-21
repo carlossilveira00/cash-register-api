@@ -77,6 +77,38 @@ RSpec.describe Product, type: :model do
     end
   end
 
+  context 'validates product.price' do
+    describe 'when product.price is nil' do
+      let(:product) { Product.new(code: 'SR1', name: 'Strawberries', price: nil, image_url: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')}
+
+      it 'not valid' do
+        expect(product).not_to be_valid
+      end
+    end
+
+    describe 'when product.price is not a integer' do
+      let(:product) { Product.new(code: 'SR1', name: 'Strawberries', price: '4.99', image_url: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')}
+
+      it 'not valid' do
+        expect(product).not_to be_valid
+      end
+    end
+
+    describe 'when product.price is a integer' do
+      let(:product) { Product.new(code: 'SR1', name: 'Strawberries', price: 4.99, image_url: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')}
+
+      it 'valid' do
+        expect(product).to be_valid
+      end
+
+      it 'sets the correct product.price' do
+        expect(product.price).to eq(4.99)
+      end
+    end
+
+  end
+
+
 
 
 end
