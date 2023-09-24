@@ -102,4 +102,22 @@ RSpec.describe CartItem, type: :model do
       end
     end
   end
+
+  context '#self.free_quantity' do
+    let(:cart_item) { FactoryBot.build(:cart_item, cart_id: cart.id, product_id: product.id, free_quantity: 1) }
+
+    describe 'when using it as a reader' do
+      it 'returns the free_quantity' do
+        expect(cart_item.free_quantity).to eq(1)
+      end
+    end
+
+    describe 'when using it as a writer' do
+      it 'updates the item with the correct free_quantity' do
+        cart_item.free_quantity = 2
+
+        expect(cart_item.free_quantity).to eq(2)
+      end
+    end
+  end
 end
