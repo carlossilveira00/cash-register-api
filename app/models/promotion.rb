@@ -32,7 +32,7 @@ class Promotion < ApplicationRecord
     # and multiply it by how many free products we get from the promotion
     expected_promotion_free_quantity = times_applied * promotion_free_quantity
 
-    # Check if the expected values match the cart item's values
+    # Check if the expected values match the cart item's values, if they do then return true, which means the promotion was applied correctly.
     expected_promotion_free_quantity == cart_item.free_quantity && expected_discounted_value == cart_item.discounted_price
   end
 end
