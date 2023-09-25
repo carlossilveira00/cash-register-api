@@ -35,4 +35,12 @@ class Promotion < ApplicationRecord
     # Check if the expected values match the cart item's values, if they do then return true, which means the promotion was applied correctly.
     expected_promotion_free_quantity == cart_item.free_quantity && expected_discounted_value == cart_item.discounted_price
   end
+
+  def validate_price_discount_per_quantity(cart_item)
+    # If the cart_item.quantity is equal or bigger then the min_quantity, check if the discounted_price is correct.
+    return cart_item.quantity * discount == cart_item.discounted_price if cart_item.quantity >= min_quantity
+
+    # Otherwise return false.
+    false
+  end
 end
