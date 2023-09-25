@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_25_153057) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_25_172809) do
   create_table "cart_items", force: :cascade do |t|
     t.integer "cart_id", null: false
     t.integer "product_id", null: false
@@ -20,8 +20,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_25_153057) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "free_quantity"
+    t.integer "promotion_id"
+    t.string "promotions_status"
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
     t.index ["product_id"], name: "index_cart_items_on_product_id"
+    t.index ["promotion_id"], name: "index_cart_items_on_promotion_id"
   end
 
   create_table "carts", force: :cascade do |t|
@@ -52,4 +55,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_25_153057) do
 
   add_foreign_key "cart_items", "carts"
   add_foreign_key "cart_items", "products"
+  add_foreign_key "cart_items", "promotions"
 end
