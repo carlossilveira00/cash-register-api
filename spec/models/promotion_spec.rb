@@ -226,5 +226,60 @@ RSpec.describe Promotion, type: :model do
     end
   end
 
+  context 'promotion type: percentage_discount_per_quantity' do
+    describe 'when it has promotion_free_quantity' do
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'percentage_discount_per_quantity',  min_quantity: 3, discount: 63.33, promotion_free_quantity: 2) }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+
+      it 'raises error stating promotion_free_quantity should not be present' do
+        promotion.valid?
+        expect(promotion.errors[:base]).to include('This type of promotion does not have promotion free quantity.')
+      end
+    end
+
+    describe 'when min_quantity is not present' do
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'percentage_discount_per_quantity',  min_quantity: nil, discount: 63.33, promotion_free_quantity: nil) }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+
+      it 'raises error stating it should be present' do
+        promotion.valid?
+        expect(promotion.errors[:base]).to include('This type of promotion must have a minimum quantity and a discount.')
+      end
+    end
+
+    describe 'when discount is not present' do
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'percentage_discount_per_quantity',  min_quantity: 3, discount: nil, promotion_free_quantity: 2) }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+
+      it 'raises error stating it should be present' do
+        promotion.valid?
+        expect(promotion.errors[:base]).to include('This type of promotion must have a minimum quantity and a discount.')
+      end
+    end
+
+    describe 'when min_quantity, discount are present and promotion_free_quantity is nil' do
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'percentage_discount_per_quantity',  min_quantity: 3, discount: 63.33, promotion_free_quantity: nil) }
+
+      it 'valid' do
+        expect(promotion).to be_valid
+      end
+
+      it 'sets the attribute correctly' do
+        expect(promotion.min_quantity).to eq(3)
+        expect(promotion.promotion_free_quantity).to eq(nil)
+        expect(promotion.discount).to eq(63.33)
+      end
+    end
+  end
+
 
 end
