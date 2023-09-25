@@ -22,6 +22,17 @@ class Promotion < ApplicationRecord
     end
   end
 
+  def validate_promotion(cart_item)
+    case promotion_type
+    when 'buy_x_get_x_free'
+      validate_buy_x_get_x_free(cart_item)
+    when 'price_discount_per_quantity'
+      validate_price_discount_per_quantity(cart_item)
+    when 'percentage_discount_per_quantity'
+      validate_percentage_discount_per_quantity(cart_item)
+    end
+  end
+
   def validate_buy_x_get_x_free(cart_item)
     # Calculate how many times the promotion can be applied
     times_applied = cart_item.quantity / min_quantity

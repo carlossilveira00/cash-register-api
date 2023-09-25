@@ -319,7 +319,7 @@ RSpec.describe Promotion, type: :model do
         )
       end
 
-      it 'returns true' do
+      it 'returns false' do
         expect(promotion.validate_promotion(cart_item)).to eq(false)
       end
     end
@@ -361,7 +361,7 @@ RSpec.describe Promotion, type: :model do
         )
       end
 
-      it 'returns true' do
+      it 'returns false' do
         expect(promotion.validate_promotion(cart_item)).to eq(false)
       end
     end
@@ -383,11 +383,11 @@ RSpec.describe Promotion, type: :model do
       end
 
       it 'returns true' do
-        expect(promotion.validate_promotion).to eq(true)
+        expect(promotion.validate_promotion(cart_item)).to eq(true)
       end
     end
 
-    describe 'when promotion type is percentage_discount_per_quantity and the promotion was applied correctly' do
+    describe 'when promotion type is percentage_discount_per_quantity and the promotion was applied incorrectly' do
       let(:cart) { FactoryBot.create(:cart, total: 22.46) }
       let(:product) { FactoryBot.create(:product, code: 'CF1', name: 'Coffee', price: 11.23) }
       let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 3, free_quantity: nil, undiscounted_price: 33.69, discounted_price: 21.46) }
@@ -403,8 +403,8 @@ RSpec.describe Promotion, type: :model do
         )
       end
 
-      it 'returns true' do
-        expect(promotion.validate_promotion).to eq(false)
+      it 'returns false' do
+        expect(promotion.validate_promotion(cart_item)).to eq(false)
       end
     end
   end
