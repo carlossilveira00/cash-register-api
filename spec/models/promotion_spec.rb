@@ -281,5 +281,89 @@ RSpec.describe Promotion, type: :model do
     end
   end
 
+  context '#validate_buy_x_get_x_free' do
+    describe 'when promotion is applied correctly' do
+      let(:cart) { FactoryBot.create(:cart, total: 3.11) }
+      let(:product) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 1, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.11) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Green Tea Promotion',
+          product_code: 'GR1',
+          promotion_type: 'buy_x_get_x_free',
+          discount: nil,
+          min_quantity: 1,
+          promotion_free_quantity: 1
+        )
+      end
 
+      it 'returns true' do
+        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(true)
+      end
+    end
+
+    describe 'when promotion in not applied correctly and it has a different discounted_price' do
+      let(:cart) { FactoryBot.create(:cart, total: 3.11) }
+      let(:product) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 1, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.20) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Green Tea Promotion',
+          product_code: 'GR1',
+          promotion_type: 'buy_x_get_x_free',
+          discount: nil,
+          min_quantity: 1,
+          promotion_free_quantity: 1
+        )
+      end
+
+      it 'returns false' do
+        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(true)
+      end
+    end
+
+    describe 'when promotion in not applied correctly and it has a different free_quantity' do
+      let(:cart) { FactoryBot.create(:cart, total: 3.11) }
+      let(:product) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 1, free_quantity: 2, undiscounted_price: 6.12, discounted_price: 3.11) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Green Tea Promotion',
+          product_code: 'GR1',
+          promotion_type: 'buy_x_get_x_free',
+          discount: nil,
+          min_quantity: 1,
+          promotion_free_quantity: 1
+        )
+      end
+
+      it 'returns false' do
+        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(true)
+      end
+    end
+
+    describe 'when promotion in not applied correctly and it has a different quantity' do
+      let(:cart) { FactoryBot.create(:cart, total: 3.11) }
+      let(:product) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 2, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.11) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Green Tea Promotion',
+          product_code: 'GR1',
+          promotion_type: 'buy_x_get_x_free',
+          discount: nil,
+          min_quantity: 1,
+          promotion_free_quantity: 1
+        )
+      end
+
+      it 'returns false' do
+        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(true)
+      end
+    end
+  end
 end
