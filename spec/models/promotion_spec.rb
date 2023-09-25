@@ -281,6 +281,135 @@ RSpec.describe Promotion, type: :model do
     end
   end
 
+  context '#validate_promotion' do
+    describe 'when promotion type is buy_x_get_x_free and the promotion was applied correctly' do
+      let(:cart) { FactoryBot.create(:cart, total: 3.11) }
+      let(:product) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 1, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.11) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Green Tea Promotion',
+          product_code: 'GR1',
+          promotion_type: 'buy_x_get_x_free',
+          discount: nil,
+          min_quantity: 1,
+          promotion_free_quantity: 1
+        )
+      end
+
+      it 'returns true' do
+        expect(promotion.validate_promotion(cart_item)).to eq(true)
+      end
+    end
+
+    describe 'when promotion type is buy_x_get_x_free and the promotion was applied incorrectly' do
+      let(:cart) { FactoryBot.create(:cart, total: 3.11) }
+      let(:product) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 2, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.11) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Green Tea Promotion',
+          product_code: 'GR1',
+          promotion_type: 'buy_x_get_x_free',
+          discount: nil,
+          min_quantity: 1,
+          promotion_free_quantity: 1
+        )
+      end
+
+      it 'returns true' do
+        expect(promotion.validate_promotion(cart_item)).to eq(false)
+      end
+    end
+
+    describe 'when promotion type is price_discount_per_quantity and the promotion was applied correctly' do
+      let(:cart) { FactoryBot.create(:cart, total: 13.50) }
+      let(:product) { FactoryBot.create(:product, code: 'SR1', name: 'Strawberries', price: 5.00) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 3, free_quantity: nil, undiscounted_price: 15.00, discounted_price: 13.50) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Strawberrie Promotion',
+          product_code: 'SR1',
+          promotion_type: 'price_discount_per_quantity',
+          discount: 4.50,
+          min_quantity: 3,
+          promotion_free_quantity: nil
+        )
+      end
+
+      it 'returns true' do
+        expect(promotion.validate_promotion(cart_item)).to eq(true)
+      end
+    end
+
+    describe 'when promotion type is price_discount_per_quantity and the promotion was applied incorrectly' do
+      let(:cart) { FactoryBot.create(:cart, total: 13.50) }
+      let(:product) { FactoryBot.create(:product, code: 'SR1', name: 'Strawberries', price: 5.00) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 3, free_quantity: nil, undiscounted_price: 15.00, discounted_price: 12.50) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Strawberrie Promotion',
+          product_code: 'SR1',
+          promotion_type: 'price_discount_per_quantity',
+          discount: 4.50,
+          min_quantity: 3,
+          promotion_free_quantity: nil
+        )
+      end
+
+      it 'returns true' do
+        expect(promotion.validate_promotion(cart_item)).to eq(false)
+      end
+    end
+
+    describe 'when promotion type is percentage_discount_per_quantity and the promotion was applied correctly' do
+      let(:cart) { FactoryBot.create(:cart, total: 22.46) }
+      let(:product) { FactoryBot.create(:product, code: 'CF1', name: 'Coffee', price: 11.23) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 3, free_quantity: nil, undiscounted_price: 33.69, discounted_price: 22.46) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Coffee Promotion',
+          product_code: 'CF1',
+          promotion_type: 'percentage_discount_per_quantity',
+          discount: (2.0 / 3.0),
+          min_quantity: 3,
+          promotion_free_quantity: nil
+        )
+      end
+
+      it 'returns true' do
+        expect(promotion.validate_promotion).to eq(true)
+      end
+    end
+
+    describe 'when promotion type is percentage_discount_per_quantity and the promotion was applied correctly' do
+      let(:cart) { FactoryBot.create(:cart, total: 22.46) }
+      let(:product) { FactoryBot.create(:product, code: 'CF1', name: 'Coffee', price: 11.23) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 3, free_quantity: nil, undiscounted_price: 33.69, discounted_price: 21.46) }
+      let(:promotion) do
+        FactoryBot.create(
+          :promotion,
+          title: 'Coffee Promotion',
+          product_code: 'CF1',
+          promotion_type: 'percentage_discount_per_quantity',
+          discount: (2.0 / 3.0),
+          min_quantity: 3,
+          promotion_free_quantity: nil
+        )
+      end
+
+      it 'returns true' do
+        expect(promotion.validate_promotion).to eq(false)
+      end
+    end
+  end
+
+
   context '#validate_buy_x_get_x_free' do
     describe 'when promotion is applied correctly' do
       let(:cart) { FactoryBot.create(:cart, total: 3.11) }
