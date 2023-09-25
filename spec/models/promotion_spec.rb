@@ -115,4 +115,53 @@ RSpec.describe Promotion, type: :model do
     end
   end
 
+  context 'promotion type: buy_x_get_x_free' do
+    describe 'when it has a discount' do
+      let(:promotion) { FactoryBot.build(:promotion, discount: 50.00) }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+    end
+
+    describe 'when min_quantity is not present' do
+      let(:promotion) { FactoryBot.build(:promotion, min_quantity: nil) }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+
+      it 'raises error stating it should be present' do
+        expect(promotion.errors[:min_quantity]).to include('This type of promotion must have a minimum quantity.')
+      end
+    end
+
+    describe 'when promotion_free_quantity is not present' do
+      let(:promotion) { FactoryBot.build(:promotion, promotion_free_quantity: nil) }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+
+      it 'raises error stating it should be present' do
+        expect(promotion.errors[:promotion_free_quantity]).to include('This type of promotion must have a promotion free quantity.')
+      end
+    end
+
+    describe 'when promotion_free_quantity, min_quantity are present and discount is nil' do
+      let(:promotion) { FactoryBot.build(:promotion, min_quantity: 1, promotion_free_quantity: 1, discount: nil) }
+
+      it 'valid' do
+        expect(promotion).to be_valid
+      end
+
+      it 'sets the attribute correctly' do
+        expect(promotion.min_quantity).to eq(1)
+        expect(promotion.promotion_free_quantity).to eq(1)
+        expect(promotion.discount).to eq(nil)
+      end
+    end
+  end
+
+
 end
