@@ -77,4 +77,42 @@ RSpec.describe Promotion, type: :model do
     end
   end
 
+  context 'validates promotion.type' do
+    describe 'when promotion.type is nil' do
+      let(:promotion) { FactoryBot.build(:promotion, type: nil) }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+    end
+
+    describe 'when promotion.type is blank' do
+      let(:promotion) { FactoryBot.build(:promotion, type: '') }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+    end
+
+    describe 'when promotion.type is a different type from the allowed types' do
+      let(:promotion) { FactoryBot.build(:promotion, type: 'random_promotion') }
+
+      it 'not valid' do
+        expect(promotion).not_to be_valid
+      end
+    end
+
+    describe 'when promotion.type is one of the allowed types' do
+      let(:promotion) { FactoryBot.build(:promotion) }
+
+      it 'valid' do
+        expect(promotion).to be_valid
+      end
+
+      it 'sets the correct promotion.type' do
+        expect(promotion.type).to eq('buy_x_get_x_free')
+      end
+    end
+  end
+
 end
