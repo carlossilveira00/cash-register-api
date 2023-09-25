@@ -173,7 +173,7 @@ RSpec.describe Promotion, type: :model do
 
   context 'promotion type: price_discount_per_quantity' do
     describe 'when it has promotion_free_quantity' do
-      let(:promotion) { FactoryBot.build(:promotion, free_quantity: 5) }
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'price_discount_per_quantity',  min_quantity: 3, discount: 4.50, promotion_free_quantity: 2) }
 
       it 'not valid' do
         expect(promotion).not_to be_valid
@@ -186,7 +186,7 @@ RSpec.describe Promotion, type: :model do
     end
 
     describe 'when min_quantity is not present' do
-      let(:promotion) { FactoryBot.build(:promotion, min_quantity: nil, discount: 4.50) }
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'price_discount_per_quantity',  min_quantity: nil, discount: 4.50, promotion_free_quantity: nil) }
 
       it 'not valid' do
         expect(promotion).not_to be_valid
@@ -199,7 +199,7 @@ RSpec.describe Promotion, type: :model do
     end
 
     describe 'when discount is not present' do
-      let(:promotion) { FactoryBot.build(:promotion, discount: nil, min_quantity: 3) }
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'price_discount_per_quantity',  min_quantity: 3, discount: nil, promotion_free_quantity: nil) }
 
       it 'not valid' do
         expect(promotion).not_to be_valid
@@ -212,7 +212,7 @@ RSpec.describe Promotion, type: :model do
     end
 
     describe 'when min_quantity, discount are present and promotion_free_quantity is nil' do
-      let(:promotion) { FactoryBot.build(:promotion, min_quantity: 3, discount: 4.50, promotion_free_quantity: nil) }
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'price_discount_per_quantity', min_quantity: 3, discount: 4.50, promotion_free_quantity: nil) }
 
       it 'valid' do
         expect(promotion).to be_valid
