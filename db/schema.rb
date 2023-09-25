@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_25_135245) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_25_153057) do
   create_table "cart_items", force: :cascade do |t|
     t.integer "cart_id", null: false
     t.integer "product_id", null: false
@@ -42,7 +42,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_25_135245) do
   create_table "promotions", force: :cascade do |t|
     t.string "title"
     t.string "product_code"
-    t.string "type"
+    t.string "promotion_type"
     t.float "discount"
     t.integer "min_quantity"
     t.integer "promotion_free_quantity"

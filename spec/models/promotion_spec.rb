@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Promotion, type: :model do
   context 'validates promotion.title' do
+
     describe 'when promotion.title is nil' do
       let(:promotion) { FactoryBot.build(:promotion, title: nil) }
 
@@ -77,32 +78,32 @@ RSpec.describe Promotion, type: :model do
     end
   end
 
-  context 'validates promotion.type' do
-    describe 'when promotion.type is nil' do
-      let(:promotion) { FactoryBot.build(:promotion, type: nil) }
+  context 'validates promotion.promotion_type' do
+    describe 'when promotion.promotion_type is nil' do
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: nil) }
 
       it 'not valid' do
         expect(promotion).not_to be_valid
       end
     end
 
-    describe 'when promotion.type is blank' do
-      let(:promotion) { FactoryBot.build(:promotion, type: '') }
+    describe 'when promotion.promotion_type is blank' do
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: '') }
 
       it 'not valid' do
         expect(promotion).not_to be_valid
       end
     end
 
-    describe 'when promotion.type is a different type from the allowed types' do
-      let(:promotion) { FactoryBot.build(:promotion, type: 'random_promotion') }
+    describe 'when promotion.promotion_type is a different type from the allowed types' do
+      let(:promotion) { FactoryBot.build(:promotion, promotion_type: 'random_promotion') }
 
       it 'not valid' do
         expect(promotion).not_to be_valid
       end
     end
 
-    describe 'when promotion.type is one of the allowed types' do
+    describe 'when promotion.promotion_type is one of the allowed types' do
       let(:promotion) { FactoryBot.build(:promotion) }
 
       it 'valid' do
@@ -110,7 +111,7 @@ RSpec.describe Promotion, type: :model do
       end
 
       it 'sets the correct promotion.type' do
-        expect(promotion.type).to eq('buy_x_get_x_free')
+        expect(promotion.promotion_type).to eq('buy_x_get_x_free')
       end
     end
   end
@@ -122,6 +123,11 @@ RSpec.describe Promotion, type: :model do
       it 'not valid' do
         expect(promotion).not_to be_valid
       end
+
+      it 'raises error stating discount should not be present' do
+        promotion.valid?
+        expect(promotion.errors[:base]).to include('This type of promotion does not have discount.')
+      end
     end
 
     describe 'when min_quantity is not present' do
@@ -132,7 +138,8 @@ RSpec.describe Promotion, type: :model do
       end
 
       it 'raises error stating it should be present' do
-        expect(promotion.errors[:min_quantity]).to include('This type of promotion must have a minimum quantity.')
+        promotion.valid?
+        expect(promotion.errors[:base]).to include('This type of promotion must have a minimum quantity and a promotion free quantity.')
       end
     end
 
@@ -144,7 +151,8 @@ RSpec.describe Promotion, type: :model do
       end
 
       it 'raises error stating it should be present' do
-        expect(promotion.errors[:promotion_free_quantity]).to include('This type of promotion must have a promotion free quantity.')
+        promotion.valid?
+        expect(promotion.errors[:base]).to include('This type of promotion must have a minimum quantity and a promotion free quantity.')
       end
     end
 
