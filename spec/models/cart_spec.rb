@@ -30,9 +30,11 @@ RSpec.describe Cart, type: :model do
   end
 
   context '#validate_cart_total' do
-    let(:product) { FactoryBot.build(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
-    let(:cart) { FactoryBot.build(:cart, total: 3.11) }
-    let(:cart_item) { FactoryBot.build(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 1, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.11) }
+    let(:product) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
+    let(:cart) { FactoryBot.create(:cart, total: 3.11) }
+    before do
+      FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 1, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.11)
+    end
 
     describe 'when total is correct' do
       it 'returns true' do
