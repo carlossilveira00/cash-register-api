@@ -43,4 +43,18 @@ class Promotion < ApplicationRecord
     # Otherwise return false.
     false
   end
+
+  def validate_percentage_discount_per_quantity(cart_item)
+    # Check if the cart item quantity meets the minimum requirement for this promotion.
+    return false unless cart_item.quantity >= min_quantity
+
+    # Calculate the expected discounted price for the cart item:
+    # 1. Multiply the original product price by the discount percentage
+    # 2. Multiply the result by the quantity of items in the cart
+    # 3. Round the expected discounted price to 2 decimal places for accurate comparison
+    expected_discounted_price = (cart_item.product.price * discount * cart_item.quantity).round(2)
+
+    # Check if the calculated expected discounted price matches the actual discounted price of the cart item
+    expected_discounted_price == cart_item.discounted_price
+  end
 end

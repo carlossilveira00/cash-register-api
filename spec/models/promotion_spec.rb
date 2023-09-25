@@ -413,23 +413,23 @@ RSpec.describe Promotion, type: :model do
 
   context '#validate_percentage_discount_per_quantity' do
     describe 'when promotion is applied correctly' do
-      let(:cart) { FactoryBot.create(:cart, total: 22.35) }
+      let(:cart) { FactoryBot.create(:cart, total: 22.46) }
       let(:product) { FactoryBot.create(:product, code: 'CF1', name: 'Coffee', price: 11.23) }
-      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 3, free_quantity: nil, undiscounted_price: 33.69, discounted_price: 22.35) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 3, free_quantity: nil, undiscounted_price: 33.69, discounted_price: 22.46) }
       let(:promotion) do
         FactoryBot.create(
           :promotion,
           title: 'Coffee Promotion',
           product_code: 'CF1',
           promotion_type: 'percentage_discount_per_quantity',
-          discount: 66.33,
+          discount: (2.0 / 3.0),
           min_quantity: 3,
           promotion_free_quantity: nil
         )
       end
 
       it 'returns true' do
-        expect(promotion.validate_price_discount_per_quantity(cart_item)).to eq(true)
+        expect(promotion.validate_percentage_discount_per_quantity(cart_item)).to eq(true)
       end
     end
 
@@ -443,14 +443,14 @@ RSpec.describe Promotion, type: :model do
           title: 'Coffee Promotion',
           product_code: 'CF1',
           promotion_type: 'percentage_discount_per_quantity',
-          discount: 66.33,
+          discount: 67.00,
           min_quantity: 3,
           promotion_free_quantity: nil
         )
       end
 
       it 'returns false' do
-        expect(promotion.validate_price_discount_per_quantity(cart_item)).to eq(false)
+        expect(promotion.validate_percentage_discount_per_quantity(cart_item)).to eq(false)
       end
     end
   end
