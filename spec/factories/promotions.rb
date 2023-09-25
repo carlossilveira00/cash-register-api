@@ -1,11 +1,10 @@
 FactoryBot.define do
   factory :promotion do
-    title { "MyString" }
-    product_code { "MyString" }
-    type { "" }
-    discount { 1.5 }
+    title { 'Green Tea Promotion' }
+    product_code { 'GR1' }
+    type { 'buy_x_get_x_free' }
+    discount { nil }
     min_quantity { 1 }
-    promotion_free_quantity { "MyString" }
-    integer { "MyString" }
+    promotion_free_quantity { 1 }
   end
 end
