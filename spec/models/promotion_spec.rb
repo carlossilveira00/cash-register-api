@@ -285,7 +285,7 @@ RSpec.describe Promotion, type: :model do
     describe 'when promotion is applied correctly' do
       let(:cart) { FactoryBot.create(:cart, total: 3.11) }
       let(:product) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11) }
-      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 1, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.11) }
+      let(:cart_item) { FactoryBot.create(:cart_item, cart_id: cart.id, product_id: product.id, quantity: 2, free_quantity: 1, undiscounted_price: 6.12, discounted_price: 3.11) }
       let(:promotion) do
         FactoryBot.create(
           :promotion,
@@ -293,7 +293,7 @@ RSpec.describe Promotion, type: :model do
           product_code: 'GR1',
           promotion_type: 'buy_x_get_x_free',
           discount: nil,
-          min_quantity: 1,
+          min_quantity: 2,
           promotion_free_quantity: 1
         )
       end
@@ -320,7 +320,7 @@ RSpec.describe Promotion, type: :model do
       end
 
       it 'returns false' do
-        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(true)
+        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(false)
       end
     end
 
@@ -341,7 +341,7 @@ RSpec.describe Promotion, type: :model do
       end
 
       it 'returns false' do
-        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(true)
+        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(false)
       end
     end
 
@@ -362,7 +362,7 @@ RSpec.describe Promotion, type: :model do
       end
 
       it 'returns false' do
-        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(true)
+        expect(promotion.validate_buy_x_get_x_free(cart_item)).to eq(false)
       end
     end
   end

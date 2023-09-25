@@ -21,4 +21,18 @@ class Promotion < ApplicationRecord
       errors.add(:base, 'This type of promotion must have a minimum quantity and a discount.') if !min_quantity.present? || !discount.present?
     end
   end
+
+  def validate_buy_x_get_x_free(cart_item)
+    # Calculate how many times the promotion can be applied
+    times_applied = cart_item.quantity / min_quantity
+
+    # To calculate the discounted value, we do the times_applied * min_quantity * product price. Since the other items must be free.
+    expected_discounted_value = times_applied * min_quantity * cart_item.product.price
+    # To calculate the promotion_free_quantity, we take how many times this promotion can be applied
+    # and multiply it by how many free products we get from the promotion
+    expected_promotion_free_quantity = times_applied * promotion_free_quantity
+
+    # Check if the expected values match the cart item's values
+    expected_promotion_free_quantity == cart_item.free_quantity && expected_discounted_value == cart_item.discounted_price
+  end
 end
