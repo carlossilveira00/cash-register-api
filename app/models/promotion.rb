@@ -5,6 +5,19 @@ class Promotion < ApplicationRecord
   validates :promotion_type, inclusion: { in: %w[buy_x_get_x_free price_discount_per_quantity percentage_discount_per_quantity], message: 'must be one of type buy_x_get_x_free, price_discount_per_quantity or percentage_discount_per_quantity.' }
   validate :validate_promotion_rules
 
+  def validate_promotion(cart_item)
+    case promotion_type
+    when 'buy_x_get_x_free'
+      validate_buy_x_get_x_free(cart_item)
+    when 'price_discount_per_quantity'
+      validate_price_discount_per_quantity(cart_item)
+    when 'percentage_discount_per_quantity'
+      validate_percentage_discount_per_quantity(cart_item)
+    end
+  end
+
+  private
+
   def validate_promotion_rules
     case promotion_type
     when 'buy_x_get_x_free'
@@ -21,19 +34,6 @@ class Promotion < ApplicationRecord
       errors.add(:base, 'This type of promotion must have a minimum quantity and a discount.') if !min_quantity.present? || !discount.present?
     end
   end
-
-  def validate_promotion(cart_item)
-    case promotion_type
-    when 'buy_x_get_x_free'
-      validate_buy_x_get_x_free(cart_item)
-    when 'price_discount_per_quantity'
-      validate_price_discount_per_quantity(cart_item)
-    when 'percentage_discount_per_quantity'
-      validate_percentage_discount_per_quantity(cart_item)
-    end
-  end
-
-  private
 
   def validate_buy_x_get_x_free(cart_item)
     # Calculate how many times the promotion can be applied
