@@ -9,4 +9,5 @@ class PromotionsController < ApplicationController
       render json: @promotions
     end
   end
+
 end
