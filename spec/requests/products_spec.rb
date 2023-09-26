@@ -1,11 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe 'Products', type: :request do
+RSpec.describe ProductsController, type: :controller do
   describe 'GET /index' do
     context 'when there is products created' do
-      let(:product1) { FactoryBot.create(:product, code: 'GR1', name: 'Green Tea', price: 3.11, image_url: 'www.google.pt') }
-      let(:product2) { FactoryBot.create(:product, code: 'SR1', name: 'Strawberries', price: 5.00, image_url: 'www.google.pt') }
-      let(:product3) { FactoryBot.create(:product, code: 'CF1', name: 'Coffee', price: 11.23, image_url: 'www.google.pt') }
+      before do
+        Product.create(code: 'GR1', name: 'Green Tea', price: 3.11, image_url: 'www.google.pt')
+        Product.create(code: 'SR1', name: 'Strawberries', price: 5.00, image_url: 'www.google.pt')
+        Product.create(code: 'CF1', name: 'Coffee', price: 11.23, image_url: 'www.google.pt')
+      end
 
       it 'return a 200 OK Status Code' do
         get :index
@@ -22,6 +24,10 @@ RSpec.describe 'Products', type: :request do
     end
 
     context 'when there is no products created' do
+      before do
+        Product.destroy_all
+      end
+
       it 'return a 404 not_found Status Code' do
         get :index
         expect(response).to have_http_status(:not_found)
