@@ -33,6 +33,8 @@ class Promotion < ApplicationRecord
     end
   end
 
+  private
+
   def validate_buy_x_get_x_free(cart_item)
     # Calculate how many times the promotion can be applied
     times_applied = cart_item.quantity / min_quantity
