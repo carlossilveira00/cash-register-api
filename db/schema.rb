@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_25_172809) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_28_201327) do
   create_table "cart_items", force: :cascade do |t|
     t.integer "cart_id", null: false
     t.integer "product_id", null: false
@@ -21,7 +21,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_25_172809) do
     t.datetime "updated_at", null: false
     t.integer "free_quantity"
     t.integer "promotion_id"
-    t.string "promotions_status"
+    t.string "promotion_status"
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
     t.index ["product_id"], name: "index_cart_items_on_product_id"
     t.index ["promotion_id"], name: "index_cart_items_on_promotion_id"
