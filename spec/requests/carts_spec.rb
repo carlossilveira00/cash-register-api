@@ -70,18 +70,6 @@ RSpec.describe CartsController, type: :controller do
     }
   end
 
-  describe 'POST /create' do
-    context 'when cart creation is successful' do
-      it 'creates a new cart' do
-        post :create
-        created_cart = Cart.last
-
-        expect(response).to have_http_status(:ok)
-        expect(created_cart).to be_present
-      end
-    end
-  end
-
   describe 'checkout' do
     context 'when all promotion were applied correctly' do
       it 'returns 200 OK status code' do

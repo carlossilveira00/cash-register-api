@@ -6,5 +6,4 @@ Rails.application.routes.draw do
   get '/products', to: 'products#index'
   get '/promotions', to: 'promotions#index'
   post '/cart/checkout', to: 'carts#checkout'
-  post '/cart', to: 'carts#create'
 end
