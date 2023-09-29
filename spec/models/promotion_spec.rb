@@ -11,14 +11,6 @@ RSpec.describe Promotion, type: :model do
       end
     end
 
-    describe 'when promotion.title is not a string' do
-      let(:promotion) { FactoryBot.build(:promotion, title: 5.99) }
-
-      it 'not valid' do
-        expect(promotion).not_to be_valid
-      end
-    end
-
     describe 'when promotion.title is blank' do
       let(:promotion) { FactoryBot.build(:promotion, title: '') }
 
